@@ -112,7 +112,7 @@ self.addEventListener('message', function(event) {
 })
 
 function fireNotification(obj, settings, lang) {
-  var title = obj.title || 'Telegram'
+  var title = obj.title || 'blockOgram'
   var body = obj.description || ''
   var icon = 'img/logo_share.png'
   var peerID

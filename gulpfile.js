@@ -2,11 +2,12 @@ var packageJson = require('./package.json')
 var gulp = require('gulp')
 var $ = require('gulp-load-plugins')({ lazy: false })
 var path = require('path')
-var http = require('http')
+var https = require('https')
 var st = require('st')
 var del = require('del')
 var swPrecache = require('sw-precache')
 var Server = require('karma').Server
+const fs = require('fs')
 
 // The generated file is being created at src
 // so it can be fetched by usemin.
@@ -28,7 +29,7 @@ gulp.task('usemin-index', function () {
   return gulp.src('app/index.html')
     .pipe($.usemin({
       html: [$.minifyHtml({ empty: true })],
-      js: ['concat', $.ngAnnotate(), $.uglify({ outSourceMap: false })],
+      js: ['concat'],
       css: ['concat', $.minifyCss({ compatibility: true, keepBreaks: true })]
     }))
     .pipe(gulp.dest('dist'))
@@ -65,7 +66,7 @@ gulp.task('copy-images', function () {
 
 gulp.task('copy', gulp.parallel(
   function () {
-    return gulp.src(['app/favicon.ico', 'app/favicon_unread.ico', 'app/manifest.webapp', 'app/manifest.webapp.json', 'app/manifest.json', 'app/**/*worker.js'])
+    return gulp.src(['app/favicon.ico', 'app/favicon_unread.ico', 'app/manifest.webapp', 'app/manifest.webapp.json', 'app/manifest.json', 'app/terms.txt', 'app/**/*worker.js'])
       .pipe(gulp.dest('dist'))
   },
   function () {
@@ -101,12 +102,20 @@ gulp.task('copy', gulp.parallel(
       .pipe(gulp.dest('dist/vendor/cryptoJS'))
   },
   function () {
+    return gulp.src('app/vendor/blockstack/blockstack.js')
+      .pipe(gulp.dest('dist/vendor/blockstack'))
+  },
+  function () {
     return gulp.src(['app/nacl/mtproto_crypto.pexe', 'app/nacl/mtproto_crypto.nmf'])
       .pipe(gulp.dest('dist/nacl/'))
   },
   function () {
     return gulp.src('app/js/background.js')
       .pipe(gulp.dest('dist/js'))
+  },
+  function () {
+    return gulp.src('cors/*')
+      .pipe(gulp.dest('dist'))
   }
 ))
 
@@ -214,11 +223,13 @@ gulp.task('bump-version-comments', function () {
 var fileGlobs = [
   './dist/**/*',
   '!dist/manifest.*',
+  '!dist/terms.*',
   '!dist/*.html',
   '!dist/fonts/*',
   '!dist/img/icons/icon*.png',
   '!dist/js/background.js',
-  '!dist/css/badbrowser.css'
+  '!dist/css/badbrowser.css',
+  '!dist/cors/*'
 ]
 
 function writeServiceWorkerFile (rootDir, handleFetch, callback) {
@@ -245,7 +256,7 @@ gulp.task('add-appcache-manifest', gulp.series('build', function () {
     .pipe($.manifest({
       timestamp: false,
       hash: true,
-      network: ['http://*', 'https://*', '*'],
+      network: ['https://*', '*'],
       filename: 'webogram.appcache',
       exclude: ['webogram.appcache', 'app.manifest']
     })
@@ -264,7 +275,7 @@ gulp.task('package-dev', gulp.parallel(
       .pipe(gulp.dest('dist_package/js'));
   },
   function () {
-    return gulp.src(['app/favicon.ico', 'app/favicon_unread.ico', 'app/manifest.webapp', 'app/manifest.json'])
+    return gulp.src(['app/favicon.ico', 'app/favicon_unread.ico', 'app/manifest.webapp', 'app/manifest.json', 'app/terms.txt'])
       .pipe(gulp.dest('dist_package'));
   },
   function () {
@@ -281,6 +292,10 @@ gulp.task('package-dev', gulp.parallel(
   },
   function () {
     return gulp.src('app/**/*.json')
+      .pipe(gulp.dest('dist_package'));
+  },
+  function () {
+    return gulp.src('cors/*')
       .pipe(gulp.dest('dist_package'));
   },
   function () {
@@ -311,9 +326,13 @@ gulp.task('watchhtml', function () {
 })
 
 gulp.task('server', function (done) {
-  http.createServer(
-    st({ path: __dirname, index: 'index.html', cache: false })
-  ).listen(8000, done)
+  var options = {
+    key: fs.readFileSync('privatekey.pem'),
+    cert: fs.readFileSync('certificate.pem'),
+  };
+  var mount = st({ path: __dirname + '/app', index: 'index.html', cache: false, cors: true });
+  var server = https.createServer(options, mount);
+  server.listen(8000, done);
 })
 
 gulp.task('watch', gulp.series(gulp.parallel('server', 'less'), function () {

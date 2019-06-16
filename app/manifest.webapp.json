@@ -1,9 +1,9 @@
 {
   "name": "Telegram",
-  "description": "Telegram Web App.\nMore info & source code here: https://github.com/zhukov/webogram",
+  "description": "Telegram Web App in the Blockstack.\nMore info & source code here: https://github.com/marcojrfurtado/blockogram",
   "short_name": "Telegram",
   "display": "standalone",
-  "theme_color": "#497495",
+  "theme_color": "#7e4995",
   "gcm_sender_id": "122867383838",
   "start_url": "./?utm_source=web_app_manifest",
   "scope": "/",

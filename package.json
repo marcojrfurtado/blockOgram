@@ -1,12 +1,12 @@
 {
-  "name": "Telegram",
-  "description": "Telegram Web App.\nMore info & source code here: https://github.com/zhukov/webogram",
-  "version": "0.7.0",
+  "name": "blockOgram",
+  "description": "Telegram Web App.\nMore info & source code here: https://github.com/marcojrfurtado/blockogram",
+  "version": "0.1.0",
   "main": "app/index.html",
   "single-instance": true,
   "dom_storage_quota": 40,
   "window": {
-    "title": "Telegram",
+    "title": "blockOgram",
     "icon": "app/img/icons/icon128.png",
     "toolbar": false,
     "frame": true,
@@ -26,12 +26,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zhukov/webogram.git"
+    "url": "https://github.com/marcojrfurtado/blockogram.git"
   },
   "author": "zhukov",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/zhukov/webogram/issues"
+    "url": "https://github.com/marcojrfurtado/blockogram/issues"
   },
   "locales": [
     "en-us",
@@ -42,7 +42,7 @@
     "nl-nl",
     "pt-br"
   ],
-  "homepage": "http://zhukov.github.io/webogram",
+  "homepage": "http://blockogram.com",
   "devDependencies": {
     "del": "^4.1.1",
     "gulp": "^4.0.2",

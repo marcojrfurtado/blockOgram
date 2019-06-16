@@ -9,26 +9,35 @@
 /* global Config, location, templateUrl, onContentLoaded, tsNow, cancelEvent, safeReplaceObject, dT, SearchIndexManager, setZeroTimeout, versionCompare, calcImageInBox, getSelectedText, SVGElement, hasOnclick  */
 
 /* Controllers */
-
 angular.module('myApp.controllers', ['myApp.i18n'])
 
-  .controller('AppWelcomeController', function ($scope, $location, MtpApiManager, ChangelogNotifyService, LayoutSwitchService) {
-    MtpApiManager.getUserID().then(function (id) {
-      if (id) {
-        $location.url('/im')
-        return
-      }
-      if (location.protocol == 'http:' &&
-        !Config.Modes.http &&
-        Config.App.domains.indexOf(location.hostname) != -1) {
-        location.href = location.href.replace(/^http:/, 'https:')
-        return
-      }
-      $location.url('/login')
-    })
+  .controller('AppWelcomeController', function ($scope, $location, MtpApiManager, ChangelogNotifyService, LayoutSwitchService, BlockstackAuthManager) {
+
+    if (BlockstackAuthManager.isSignInPending()) {
+      BlockstackAuthManager.loginMultiStep()
+      return
+    } else if (BlockstackAuthManager.isSignedIn()) {
+      MtpApiManager.getUserID().then(function (id) {
+        if (id) {
+          $location.url('/im')
+          return
+        }
+        if (location.protocol == 'http:' &&
+          !Config.Modes.http &&
+          Config.App.domains.indexOf(location.hostname) != -1) {
+          location.href = location.href.replace(/^http:/, 'https:')
+          return
+        }
+        $location.url('/login')
+      })
+    }
 
     ChangelogNotifyService.checkUpdate()
     LayoutSwitchService.start()
+
+    $scope.next = function () {
+      BlockstackAuthManager.loginMultiStep()
+    }
   })
 
   .controller('AppLoginController', function ($scope, $rootScope, $location, $timeout, $modal, $modalStack, MtpApiManager, ErrorService, NotificationsManager, PasswordManager, ChangelogNotifyService, IdleManager, LayoutSwitchService, WebPushApiManager, TelegramMeWebService, _) {
@@ -454,7 +463,7 @@ angular.module('myApp.controllers', ['myApp.i18n'])
     LayoutSwitchService.start()
   })
 
-  .controller('AppIMController', function ($q, qSync, $scope, $location, $routeParams, $modal, $rootScope, $modalStack, MtpApiManager, AppUsersManager, AppChatsManager, AppMessagesManager, AppPeersManager, ContactsSelectService, ChangelogNotifyService, ErrorService, AppRuntimeManager, HttpsMigrateService, LayoutSwitchService, LocationParamsService, AppStickersManager) {
+  .controller('AppIMController', function ($q, qSync, $scope, $location, $routeParams, $modal, $rootScope, $modalStack, MtpApiManager, AppUsersManager, AppChatsManager, AppMessagesManager, AppPeersManager, ContactsSelectService, ChangelogNotifyService, ErrorService, AppRuntimeManager, HttpsMigrateService, LayoutSwitchService, LocationParamsService, AppStickersManager, BlockstackAuthManager) {
     $scope.$on('$routeUpdate', updateCurDialog)
 
     var pendingParams = false
@@ -621,6 +630,10 @@ angular.module('myApp.controllers', ['myApp.i18n'])
           AppRuntimeManager.reload()
         })
       })
+    }
+
+    $scope.blockstackLogOut = function () {
+      BlockstackAuthManager.logOut('/')
     }
 
     $scope.openChangelog = function () {
@@ -4255,7 +4268,7 @@ angular.module('myApp.controllers', ['myApp.i18n'])
     }
   })
 
-  .controller('SettingsModalController', function ($rootScope, $scope, $timeout, $modal, AppUsersManager, AppChatsManager, AppPhotosManager, MtpApiManager, Storage, NotificationsManager, MtpApiFileManager, PasswordManager, ApiUpdatesManager, ChangelogNotifyService, LayoutSwitchService, WebPushApiManager, AppRuntimeManager, ErrorService, _) {
+  .controller('SettingsModalController', function ($rootScope, $scope, $timeout, $modal, AppUsersManager, AppChatsManager, AppPhotosManager, MtpApiManager, Storage, NotificationsManager, MtpApiFileManager, PasswordManager, ApiUpdatesManager, ChangelogNotifyService, LayoutSwitchService, WebPushApiManager, AppRuntimeManager, ErrorService, BlockstackAuthManager, _) {
 
     $scope.profile = {}
     $scope.photo = {}
@@ -4519,6 +4532,10 @@ angular.module('myApp.controllers', ['myApp.i18n'])
 
     $scope.openChangelog = function () {
       ChangelogNotifyService.showChangelog(false)
+    }
+
+    $scope.blockstackLogOut = function () {
+      BlockstackAuthManager.logOut('/')
     }
 
     $scope.logOut = function () {

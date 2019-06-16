@@ -1,12 +1,12 @@
 {
-  "name": "Telegram",
-  "description": "Telegram Web App.\nMore info & source code here: https://github.com/zhukov/webogram",
-  "version": "0.7.0",
+  "name": "blockOgram",
+  "description": "Telegram Web App in the Blockstack.\nMore info & source code here: https://github.com/marcojrfurtado/blockogram",
+  "version": "0.1.0",
   "type": "privileged",
   "launch_path": "/index.html",
   "developer": {
-    "name": "Igor Zhukov",
-    "url": "https://github.com/zhukov"
+    "name": "Antonio Carlos Furtado",
+    "url": "https://github.com/marcojrfurtado"
   },
   "installs_allowed_from": [
     "*"

@@ -1,22 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="IFTTT_Applet_Logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="620px" height="620px" viewBox="0 0 620 620" enable-background="new 0 0 620 620" xml:space="preserve">
-<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="311.1667" y1="603.3333" x2="311.1667" y2="19">
-	<stop  offset="0" style="stop-color:#1D93D2"/>
-	<stop  offset="1" style="stop-color:#38B0E3"/>
-</linearGradient>
-<circle fill="url(#SVGID_1_)" stroke="#FFFFFF" stroke-width="28" stroke-miterlimit="10" cx="311.167" cy="311.167" r="292.167"/>
-<path fill="#C8DAEA" d="M220.759,338.848l35.363,97.88c0,0,4.42,9.157,9.157,9.157s75.147-73.252,75.147-73.252l78.304-151.24
-	l-196.707,92.197L220.759,338.848z"/>
-<path fill="#A9C6D8" d="M267.646,363.949l-6.788,72.147c0,0-2.842,22.102,19.26,0c22.102-22.102,43.257-39.152,43.257-39.152"/>
-<g>
-	<path fill="#FFFFFF" d="M221.398,342.34l-72.734-23.7c0,0-8.683-3.526-5.894-11.525c0.575-1.65,1.736-3.052,5.21-5.473
-		c16.119-11.234,298.324-112.667,298.324-112.667s7.969-2.683,12.677-0.898c2.152,0.816,3.526,1.737,4.684,5.104
-		c0.421,1.225,0.663,3.83,0.631,6.42c-0.023,1.868-0.253,3.599-0.421,6.315c-1.719,27.732-53.145,234.705-53.145,234.705
-		s-3.076,12.112-14.103,12.524c-4.02,0.15-8.9-0.664-14.734-5.683c-21.635-18.612-96.42-68.87-112.944-79.924
-		c-0.93-0.622-1.197-1.433-1.354-2.222c-0.233-1.165,1.034-2.61,1.034-2.61S398.847,246.957,402.31,234.811
-		c0.268-0.941-0.739-1.406-2.105-1c-8.65,3.182-158.58,97.857-175.126,108.312C224.112,342.734,221.398,342.34,221.398,342.34z"/>
-</g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 26 26"
+   version="1.1"
+   id="svg68"
+   sodipodi:docname="icon.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata74">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs72" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1853"
+     inkscape:window-height="1025"
+     id="namedview70"
+     showgrid="false"
+     inkscape:zoom="32.461538"
+     inkscape:cx="12.969194"
+     inkscape:cy="13"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg68" />
+  <g
+     transform="translate(-97.5-360.11)"
+     id="g66">
+    <path
+       d="m193.93 337.9a48.214 48.214 0 1 1 -96.429 0 48.214 48.214 0 1 1 96.429 0"
+       transform="matrix(.26963 0 0 .26963 71.21 282)"
+       fill="#39638b"
+       id="path62" />
+    <path
+       fill="#fff"
+       d="m103.2 371.89l12.56-4.638s.742-.248.967.127c.162.27-.076.916-.076.916l-4.511 12.12s-.127.571-.681.683c-.649.13-.993-.687-.993-.687l-2.406-4.571-5.083-2.905s-.21-.108-.197-.515c.019-.401.42-.528.42-.528"
+       id="path64" />
+  </g>
+  <path
+     style="fill:#3f004e;fill-opacity:1;stroke-width:0.03080569"
+     d="M 12.463981,25.975389 C 10.483061,25.867886 8.7882585,25.418589 7.0883886,24.550305 5.6114642,23.7959 4.3417613,22.80844 3.239092,21.556671 1.3784608,19.44445 0.26221668,16.773882 0.04628361,13.918009 0.00344319,13.351413 0.02759904,12.106851 0.09202379,11.561374 0.56757593,7.5349328 2.7960794,4.0261668 6.2047518,1.9369199 7.8261716,0.94311735 9.4977683,0.3612541 11.493602,0.09593285 c 0.592666,-0.0787876 2.415251,-0.07845129 3.018957,5.5706e-4 1.76975,0.23161111 3.34702,0.74315354 4.805687,1.55858699 2.85546,1.5962773 4.992916,4.1890934 6.020601,7.3032169 0.145125,0.4397642 0.377241,1.3600742 0.447543,1.7744562 0.41231,2.430271 0.17249,4.794851 -0.713516,7.035136 -0.470455,1.189556 -1.136808,2.336983 -1.943599,3.34678 -2.166177,2.711234 -5.353984,4.446675 -8.816953,4.799944 -0.455567,0.04647 -1.486984,0.08039 -1.848341,0.06078 z m 1.60916,-5.008693 c 0.135627,-0.04063 0.402952,-0.264568 0.469531,-0.393317 0.02363,-0.04569 1.082781,-2.87714 2.35368,-6.292121 1.510025,-4.057527 2.328507,-6.2968102 2.36204,-6.4623026 0.08257,-0.4075048 0.02404,-0.6036945 -0.212097,-0.7109075 -0.143732,-0.065259 -0.333139,-0.074808 -0.574797,-0.028978 -0.08912,0.016901 -3.02592,1.0877833 -6.526228,2.3797393 -6.0504671,2.2332138 -6.3705567,2.3550848 -6.4931911,2.4722338 -0.1645091,0.157149 -0.2164888,0.328533 -0.1699402,0.560315 0.017916,0.08921 0.054198,0.195204 0.080627,0.235539 0.029216,0.04459 1.0554426,0.649597 2.6180488,1.54346 l 2.5699965,1.470123 1.272343,2.418982 c 1.360719,2.587003 1.397711,2.647722 1.695409,2.782844 0.149877,0.06803 0.375768,0.07796 0.554578,0.02439 z"
+     id="path76"
+     inkscape:connector-curvature="0"
+     inkscape:export-filename="/home/antonio/ExtRepos/blockgram/app/img/logo_share.png"
+     inkscape:export-xdpi="872.82001"
+     inkscape:export-ydpi="872.82001" />
 </svg>

@@ -37,6 +37,7 @@ module.exports = function (config) {
       {pattern: 'vendor/libwebpjs/libwebp-0.2.0.js', watched: false},
       {pattern: 'vendor/angularjs-toaster/toaster.js', watched: false},
       {pattern: 'vendor/clipboard/clipboard.js', watched: false},
+      {pattern: 'vendor/blockstack/blockstack.js', watched: false},
       {pattern: 'js/lib/utils.js', watched: false},
       {pattern: 'js/lib/bin_utils.js', watched: false},
       {pattern: 'js/lib/tl_utils.js', watched: false},

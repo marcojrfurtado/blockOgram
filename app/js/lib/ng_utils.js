@@ -12,15 +12,19 @@ angular.module('izhukov.utils', [])
       ConfigStorage.prefix(newPrefix)
     }
 
-    this.$get = ['$q', function ($q) {
+    this.$get = ['$q', 'GaiaConfigPersistence', function ($q, GaiaConfigPersistence) {
       var methods = {}
       angular.forEach(['get', 'set', 'remove', 'clear'], function (methodName) {
         methods[methodName] = function () {
           var deferred = $q.defer()
           var args = Array.prototype.slice.call(arguments)
-
-          args.push(function (result) {
-            deferred.resolve(result)
+          args.push(function (csResult) {
+            args.pop()
+            args.push(csResult)
+            GaiaConfigPersistence[methodName].apply(GaiaConfigPersistence, args).then(function(result) {
+              console.log('[Storage] Intercepted call to '+methodName+'('+args[0]+') -> "'+csResult+"'; Returning: '"+result+'"')
+              deferred.resolve(result)
+            })
           })
           ConfigStorage[methodName].apply(ConfigStorage, args)
 
@@ -341,6 +345,315 @@ angular.module('izhukov.utils', [])
       getByteArray: getByteArray,
       getFileCorrectUrl: getFileCorrectUrl,
       download: downloadFile
+    }
+  })
+
+  .service('BlockstackAuthManager', function () {
+    const appConfig = new blockstack.AppConfig(['store_write', 'publish_data'])
+    const userSession = new blockstack.UserSession({ appConfig: appConfig })
+
+    return {
+      loginMultiStep: loginMultiStep,
+      isSignedIn: isSignedIn,
+      isSignInPending: isSignInPending,
+      getSession: getSession,
+      logOut: logOut
+    }
+
+    function isSignedIn() {
+      return userSession.isUserSignedIn()
+    }
+
+    function getSession() {
+      return userSession
+    }
+
+    function isSignInPending() {
+      return userSession.isSignInPending()
+    }
+
+    function loginMultiStep() {
+      
+      const transitKey = userSession.store.getSessionData().transitKey
+      if (userSession.isSignInPending() && transitKey) {
+        userSession.handlePendingSignIn().then( function() {
+          window.location = window.location.origin
+        })
+      } else if (!userSession.isUserSignedIn()) {
+        if (userSession.isSignInPending()) {
+          // TODO: In Firefox, localStorage seems to be missing keys when we return from Blockstack authentication, sometimes.
+          // Either it is not persisting, even though it is asynchronous, or they are getting cleared somewhere. This is affecting 'blockstack-session'
+          console.error('Failed to persist transit key. Will re-try')
+        }
+        userSession.redirectToSignIn()
+      } else {
+        return true
+      }
+      return false
+    }
+
+    function logOut(redirectUrl) {
+      userSession.signUserOut(redirectUrl)
+    }
+  })
+
+  .service('GaiaFileStorage', function ($q, BlockstackAuthManager, FileManager) {
+
+    function isAvailable () {
+      return BlockstackAuthManager.isSignedIn();
+    }
+
+    function saveFile (fileName, blob) {
+      if (!(blob instanceof Blob)) {
+        console.log('Trying to save non-blob data in '+fileName+'. Converting.')
+        blob = blobConstruct([blob])
+      }
+
+      var options = {
+        encrypt: true
+      }
+      var deferred = $q.defer()
+      try {
+        var reader = new FileReader()
+
+        reader.onloadend = function() {
+          return  BlockstackAuthManager.getSession().putFile(fileName, reader.result, options).then( function() {
+            deferred.resolve(blob)
+          })
+        }
+        reader.onerror = function(event) {
+          deferred.reject(event)
+        }
+
+        reader.readAsArrayBuffer(blob)
+      } catch (error) {
+        return $q.reject(error)
+      }
+      return deferred.promise
+    }
+
+    //function deleteFile (fileName) {
+      // delete is not implemented in Gaia hubs
+      //return BlockstackAuthManager.getSession().deleteFile(fileName)
+    //}
+
+    function getFile (fileName) {
+      var options = {
+        decrypt: true
+      }
+      var deferred = $q.defer()
+      BlockstackAuthManager.getSession().getFile(fileName, options).then( function (arrayBuffer) {
+        if (arrayBuffer === null) {
+          deferred.reject(new Error('FILE_NOT_FOUND'))
+          return
+        }
+        var blob = blobConstruct([arrayBuffer])
+        deferred.resolve(blob)
+      })
+      return deferred.promise
+    }
+
+    function getFileWriter (fileName, mimeType) {
+      var fakeWriter = FileManager.getFakeFileWriter(mimeType, function (blob) {
+        saveFile(fileName, blob)
+      })
+      return $q.when(fakeWriter)
+    }
+
+    return {
+      name: 'Gaia',
+      isAvailable: isAvailable,
+      saveFile: saveFile,
+      getFile: getFile,
+      //deleteFile: deleteFile,
+      getFileWriter: getFileWriter
+    }
+
+  })
+
+  .service('GaiaConfigPersistence', function($q, GaiaFileStorage) {
+
+    const gaiaConfigPersistenceFileName = 'GaiaConfigPersistence.json'
+    const userAuthKey = 'user_auth'
+    var hasConfigBeenLoaded = false
+    var dictCache = {}
+
+
+    const allowedConfigKeys = new Array('user_auth', 'dc', 'dc_auth_key',
+                                       'dc1_auth_key', 'dc2_auth_key',
+                                       'dc3_auth_key', 'dc4_auth_key',
+                                       'dc5_auth_key', 'dc_server_salt',
+                                       'dc1_server_salt', 'dc2_server_salt',
+                                       'dc3_server_salt','dc4_server_salt',
+                                       'dc5_server_salt')
+    const allowedConfigKeysSet = new Set(allowedConfigKeys)
+
+    function isAuthPersisted() {
+      return userAuthKey in dictCache
+    }
+
+    function parseConfigFromArrayBuffer(arrayBuffer) {
+      var deferred = $q.defer()
+      try {
+        var reader = new FileReader();
+        reader.onloadend = function (e) {
+          try{
+            dictCache = JSON.parse(e.target.result)
+            deferred.resolve(hasConfigBeenLoaded = true)
+          } catch(e) {
+            deferred.reject(e)
+          }
+        }
+        reader.readAsText(arrayBuffer)
+      } catch(e) {
+        deferred.reject(e)
+      }
+      return deferred.promise
+    }
+
+    var openConfigFileDeferred
+    function openConfigFile () {
+      if (!GaiaFileStorage.isAvailable()) {
+        console.warn('Gaia Storage is not available at the moment. Unable to load config')
+        return $q.resolve(false)
+      }
+      if (hasConfigBeenLoaded) {
+        console.warn('Config file has already been loaded. Ignoring request.')
+        return $q.resolve(true)
+      }
+      if (openConfigFileDeferred) {
+        console.log('Gaia config file open request is pending')
+        return openConfigFileDeferred.promise
+      }
+      openConfigFileDeferred = $q.defer()
+      GaiaFileStorage.getFile(gaiaConfigPersistenceFileName)
+        .then(function (arrayBuffer) {
+          parseConfigFromArrayBuffer(arrayBuffer).then(function() {
+            openConfigFileDeferred.resolve(hasConfigBeenLoaded = true)
+            openConfigFileDeferred = undefined
+          })
+        }).catch( function(err) {
+          if (err.message === 'FILE_NOT_FOUND') {
+            console.log('No config file has been found in Gaia storage')
+            openConfigFileDeferred.resolve(hasConfigBeenLoaded = true)
+          } else {
+            console.error('Unknown error found while opening config file.')
+            openConfigFileDeferred.reject(err)
+            openConfigFileDeferred = undefined
+          }
+        })
+      return openConfigFileDeferred.promise
+    }
+
+    function persistConfigFile () {
+      if (!GaiaFileStorage.isAvailable()) {
+        console.warn('Gaia Storage is not available at the moment. Unable to persist config')
+        return $q.resolve(false)
+      }
+
+      var cacheString = JSON.stringify(dictCache)
+      if (hasConfigBeenLoaded || isAuthIncluded()) {
+        GaiaFileStorage.saveFile(gaiaConfigPersistenceFileName, cacheString).then( function() {
+          if (!hasConfigBeenLoaded) {
+            console.log('Gaia Config file has not ben previously loaded. Config file was overwritten.')
+            hasConfigBeenLoaded = true
+          }
+        })
+      } else {
+        console.warn('Ignoring config persist request. Config has not yet been loaded')
+        openConfigFile()
+      }
+    }
+
+    function cloneStoragePersistence() {
+      ConfigStorage.get(allowedConfigKeys, function (allowedConfigParameters) {
+        allowedConfigParameters.forEach( function(param,ix) {
+          dictCache[allowedConfigKeys[ix]] = param
+        })
+        if (dictCache[userAuthKey]) {
+          persistConfigFile()
+        } else {
+          console.log('Ignoring config for now, no user auth')
+        }
+      })
+    }
+
+    function onGet() {
+      var args = Array.prototype.slice.call(arguments)
+      var keys = args.slice(0,args.length-1)
+      var storageResult = args[args.length-1]
+      var single = !Array.isArray(storageResult)
+
+      if (!single && (storageResult.length !== keys.length)) {
+        console.warn("Unexpected number of arguments. Ignoring request.")
+        return $q.resolve(storageResult)
+      }
+
+      var deferred = $q.defer()
+      var onConfigFileLoadedGet = function () {
+        ConfigStorage.get(userAuthKey, function(userAuth) {
+          if (userAuth) {
+            if (!isAuthPersisted() || dictCache[userAuthKey] !== userAuth) {
+              cloneStoragePersistence()
+            }
+          } else if (isAuthPersisted()) {
+            keys.forEach( function (k,ix) {
+              if (allowedConfigKeysSet.has(k)) {
+                if (single) {
+                  storageResult = dictCache[k]
+                } else {
+                  storageResult[ix] = dictCache[k]
+                }
+              }
+            })
+          }
+          deferred.resolve(storageResult)
+        })
+      }
+
+      if (hasConfigBeenLoaded) {
+        onConfigFileLoadedGet()
+      } else {
+        openConfigFile().then( function(result) {
+          onConfigFileLoadedGet()
+        })
+      }
+
+      return deferred.promise
+    }
+
+    function onSet() {
+      ConfigStorage.get(userAuthKey, function(isAuthenticated) {
+        if (isAuthenticated) {
+          if (!isAuthPersisted()) {
+            cloneStoragePersistence()
+          }
+        }
+      })
+      return $q.resolve(undefined)
+    }
+
+    function onRemove() {
+      console.warn('Removal of keys is not implemented by GaiaConfigPersistence')
+      return $q.resolve(undefined)
+    }
+
+    function onClear() {
+      dictCache = {}
+      if (hasConfigBeenLoaded) {
+        console.log('Requesting to clear config file')
+        persistConfigFile()
+      }
+      return $q.resolve(undefined)
+    }
+    
+    openConfigFile()
+
+    return {
+      get: onGet,
+      set: onSet,
+      remove: onRemove,
+      clear: onClear
     }
   })
 

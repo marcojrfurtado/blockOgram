@@ -1,8 +1,9 @@
 {
-  "name": "Telegram",
-  "description": "Telegram Web App.\nMore info & source code here: https://github.com/zhukov/webogram",
-  "version": "0.7.0",
-  "short_name": "Telegram",
+  "name": "blockOGram",
+  "description": "Telegram Web App in the Blockstack.\nMore info & source code here: https://github.com/marcojrfurtado/blockogram",
+  "start_url": "blockogram.com",
+  "version": "0.1.0",
+  "short_name": "blockOGram",
   "manifest_version": 2,
   "app": {
     "background": {
@@ -18,12 +19,9 @@
     "fullscreen"
   ],
   "gcm_sender_id": "122867383838",
-  "icons": {
-    "16": "img/icons/icon16.png",
-    "32": "img/icons/icon32.png",
-    "60": "img/icons/icon60.png",
-    "64": "img/icons/icon64.png",
-    "90": "img/icons/icon90.png",
-    "128": "img/icons/icon128.png"
-  }
+  "icons": [{
+    "src": "https://blockogram.com/img/icons/icon192.png",
+    "sizes": "192x192",
+    "type": "i192x192"
+  }]
 }

@@ -308,7 +308,7 @@ angular.module('izhukov.mtproto.wrapper', ['izhukov.utils', 'izhukov.mtproto'])
     }
   })
 
-  .factory('MtpApiFileManager', function (MtpApiManager, $q, qSync, FileManager, IdbFileStorage, TmpfsFileStorage, MemoryFileStorage, WebpManager) {
+  .factory('MtpApiFileManager', function (MtpApiManager, $q, qSync, FileManager, IdbFileStorage, TmpfsFileStorage, MemoryFileStorage, GaiaFileStorage, WebpManager) {
     var cachedFs = false
     var cachedFsPromise = false
     var cachedSavePromises = {}
@@ -408,6 +408,9 @@ angular.module('izhukov.mtproto.wrapper', ['izhukov.utils', 'izhukov.mtproto'])
         }
         if (IdbFileStorage.isAvailable()) {
           return IdbFileStorage
+        }
+        if (GaiaFileStorage.isAvailable()) {
+          return GaiaFileStorage
         }
       }
       return MemoryFileStorage

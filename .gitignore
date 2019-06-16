@@ -4,6 +4,8 @@
 *.sublime-workspace
 *.*~
 *.swp
+*.pem
+*.csr
 
 # Node.js package manager
 node_modules

@@ -18,10 +18,10 @@ Config = window.Config || {}
 */
 
 Config.App = {
-  id: 2496,
-  hash: '8da85b0d5bfe62527e5b244c209159c3',
-  version: '0.7.0',
-  domains: ['web.telegram.org', 'zhukov.github.io']
+  id: 529125,
+  hash: '53c6a1647fb4878609ac36501f866587',
+  version: '0.1.0',
+  domains: ['blockogram.com']
 }
 
 Config.Modes = {
@@ -259,24 +259,29 @@ Config.LangCountries = {'es': 'ES', 'ru': 'RU', 'en': 'US', 'de': 'DE', 'it': 'I
     }
   }
 
+  // TODO: find a proper way to protect any Blockstack keys from this overly destructive method
+  const doNotClearKeys = new Set(['blockstack-session'])
   function storageClear (callback) {
-    if (useLs) {
-      try {
-        localStorage.clear()
-      } catch (e) {
-        useLs = false
+    var toBeRemoved = []
+    if (useLs && !useCs) {
+      for (var i = 0; i < localStorage.length; ++i) {
+        var key = localStorage.key(i)
+        if (!doNotClearKeys.has(key) ) {
+          toBeRemoved.push(key)
+        }
       }
-    }
-
-    if (useCs) {
-      chrome.storage.local.clear(function () {
-        cache = {}
-        callback()
-      })
     } else {
-      cache = {}
-      callback()
+      chrome.storage.local.get(null, function(items) {
+        var allKeys = Object.keys(items)
+        for (var key in allKeys) {
+          if (!doNotClearKeys.has(key) ) {
+            toBeRemoved.push(key)
+          }
+        }
+      })
     }
+    console.log('CLEAR:  '+toBeRemoved)
+    return storageRemoveValue(toBeRemoved, callback)
   }
 
   window.ConfigStorage = {

@@ -43,7 +43,7 @@ angular.module('myApp', [
     StorageProvider.setPrefix('t_')
   }
 
-  $routeProvider.when('/', {template: '', controller: 'AppWelcomeController'})
+  $routeProvider.when('/', {templateUrl: templateUrl('welcome'), controller: 'AppWelcomeController'})
   $routeProvider.when('/login', {templateUrl: templateUrl('login'), controller: 'AppLoginController'})
   $routeProvider.when('/im', {templateUrl: templateUrl('im'), controller: 'AppIMController', reloadOnSearch: false})
   $routeProvider.otherwise({redirectTo: '/'})

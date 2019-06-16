@@ -1,0 +1,34 @@
+<div class="login_page_wrap" my-custom-background="#ece6ef">
+    <div class="login_head_bg"></div>
+    <div class="login_page">
+      <div class="login_head_wrap clearfix" ng-switch="progress.enabled">
+        <div ng-switch-default class="login_head_submit_wrap">
+          <a class="login_head_submit_btn" ng-click="next()">
+            <my-i18n msgid="modal_blockstack_sign_in"></my-i18n><i class="icon icon-next-submit"></i>
+          </a>
+        </div>
+        <a class="login_head_logo_link" target="_blank">
+          <i class="icon icon-tg-logo"></i><i class="icon icon-tg-title"></i>
+        </a>
+      </div>
+  
+      <div class="intro_about_wrap">
+        <h4 class="mobile_modal_section_header" my-i18n="login_about_intro"></h4>
+        <p my-i18n="login_about_desc1_md"></p>
+        <p my-i18n="login_about_desc2_md"></p>
+        <p my-i18n="login_about_desc3_md">
+            <my-i18n-param name="source-link">
+            <a href="https://github.com/marcojrfurtado/blockogram" target="_blank">{0}</a>
+            </my-i18n-param>
+            <my-i18n-param name="terms-link">
+            <a href="/terms.txt" target="_blank">{0}</a>
+            </my-i18n-param>
+        </p>  
+      </div>
+  
+      </div>
+    </div>
+  
+  </div>
+  
+  

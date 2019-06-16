@@ -20,6 +20,10 @@ describe('AppWelcomeController', function () {
         }
       }
     }
+    
+    this.BlockstackAuthManager = {
+      login: function () {}
+    }
 
     inject(function (_$controller_, _$rootScope_, _$location_) {
       this.$controller = _$controller_
@@ -33,7 +37,8 @@ describe('AppWelcomeController', function () {
         MtpApiManager: this.MtpApiManager,
         ErrorService: this.ErrorService,
         ChangelogNotifyService: this.ChangelogNotifyService,
-        LayoutSwitchService: this.LayoutSwitchService
+        LayoutSwitchService: this.LayoutSwitchService,
+        BlockstackAuthManager: this.BlockstackAuthManager,
       })
     })
   })

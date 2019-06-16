@@ -1,24 +1,9 @@
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-[![Stories in Ready](https://badge.waffle.io/zhukov/webogram.png?label=ready&title=Ready)](https://waffle.io/zhukov/webogram)
-
-## [Webogram](https://web.telegram.org) — Telegram Web App
-
-Telegram offers great [apps for mobile communication](https://www.telegram.org). It is based on the [MTProto protocol](https://core.telegram.org/mtproto) and has an [Open API](https://core.telegram.org/api). I personally like Telegram for its speed and cloud-support (that makes a web app possible, unlike in the case of WA and others).
-
-MTProto data can be carried over HTTP (SSL is also supported), so this project is my take at creating one.
-
-That said, I'm using this app myself and I'd like to share its sources, so anyone can contribute to the development. Any help is welcome!
+## [blockOgram](https://blockogram.com) — Telegram in the Blockstack
 
 
-### Interface
+blockOgram is a [Telegram](https://www.telegram.org) web-based client for the Blockstack. It is forked from [Webogram](https://github.com/zhukov/webogram), the official Telegram web client. Log in to your Telegram account, and have it associated to your Blockstack Id. Access it on any device. The app will not store any of your information in a central server, the data is ownded by you. Log-in session is persisted according to your [Gaia](https://github.com/blockstack/gaia) storage preferences. 
 
-
-Here are some screenshots of the interface:
-
-
-![Sample screenshot 1](/app/img/screenshot1.png)
-![Mobile screenshot 2](/app/img/screenshot2.png)
-![Mobile screenshot 3](/app/img/screenshot3.png)
+So why bother using the having Blockstack support? As a start, the app will allow you to store the log-in session. However, there is at least one major Telegram feature that could benefit from Gaia storage. Telegram allows us to create **Secret chats**, which offer end-to-end encryption of your conversation, and would not work be valuable with some sort of persistence support. The long term goal is to support it in blockOgram.
 
 
 ### Unsupported at the moment
@@ -33,18 +18,7 @@ Here are some screenshots of the interface:
 
 | Description        | URL           | Type  |
 | ------------- |-------------| -----:|
-| Online Web-version (hosted on Telegram servers)      | https://web.telegram.org/ | hosted
-| Online Web-version (hosted on GitHub pages)      | https://zhukov.github.io/webogram | hosted
-| Chrome Web Store      | [https://chrome.google.com/webstore/detail/telegram/ clhhggbfdinjmjhajaheehoeibfljjno](https://chrome.google.com/webstore/detail/telegram/clhhggbfdinjmjhajaheehoeibfljjno) |   packed
-| Firefox & FirefoxOS Marketplace | https://marketplace.firefox.com/app/telegram |    packed
-
-
-
-**Hosted version**: the app is downloaded via HTTPS as a usual website. Will be available offline due to application cache.
-
-**Packed version**: the app is downloaded at once in a package via HTTPS. The package is updated less frequently than the Web-version.
-
-All of the apps above are submitted and maintained by [@zhukov](https://github.com/zhukov), so feel free to use them and report bugs [here](https://github.com/zhukov/webogram/issues). Please do not report bugs which are only reproducible in different locations.
+| Online Web-version | https://blockogram.com/ | hosted
 
 
 ## Technical details
@@ -72,27 +46,18 @@ sudo npm install -g gulp
 
 This will install all the needed dependencies.
 
+The app only runs on HTTPS. You will need a valid certificate. When running locally, you may simply create a self-signed certificate as follows:
+```lang=bash
+bash scripts/create_self_signed_cert.sh
+```
+
+You will be prompted to enter the details of the certificate. Ensure that you are using `localhost` as the domain. The certificate will be created in the local directory.
 
 #### Running web-server
 
-
 Just run `npm start` (`gulp watch`) to start the web server and the livereload task.
-Open http://localhost:8000/app/index.html in your browser.
+Open https://localhost:8000/index.html in your browser.
 
-
-
-#### Running as Chrome Packaged App
-
-To run this application in Google Chrome as a packaged app, open this URL (in Chrome): `chrome://extensions/`, then tick "Developer mode" and press "Load unpacked extension...". Select the downloaded `app` folder and Webogram should appear in the list.
-
-Run `npm start` (`gulp watch`) to watch for file changes and automatically rebuild the app.
-
-
-#### Running as Firefox OS App
-
-To run this application in Firefox as a packaged app, open "Menu" -> "Developer" -> "WebIDE" (or hit `Shift + F8`). Choose "Open packaged app" from the Project menu and select the `app` folder.
-
-Run `npm start` (`gulp watch`) to watch for file changes and automatically rebuild the app.
 
 #### Running in production
 
@@ -111,6 +76,7 @@ Besides the frameworks mentioned above, other libraries are used for protocol an
 * [nanoScrollerJS](https://github.com/jamesflorentino/nanoScrollerJS)
 * [gemoji](https://github.com/github/gemoji)
 * [emoji-data](https://github.com/iamcal/emoji-data)
+* [blockstack](https://github.com/blockstack/blockstack.js)
 
 Many thanks to all these libraries' authors and contributors. A detailed list with descriptions and licenses is available [here](/app/vendor).
 
