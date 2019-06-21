@@ -13,6 +13,7 @@
         </a>
         <ul ng-switch-when="true" class="dropdown-menu">
           <li><a ng-click="openGroup()" my-i18n="head_new_group"></a></li>
+          <li><a ng-click="openSecretChat()" my-i18n="head_new_secret_chat"></a></li>
           <li><a ng-click="importContact()" my-i18n="head_new_contact"></a></li>
           <li ng-if="!isEmpty.contacts"><a ng-click="openContacts()" my-i18n="head_contacts"></a></li>
           <li><a ng-click="openSettings()" my-i18n="head_settings"></a></li>

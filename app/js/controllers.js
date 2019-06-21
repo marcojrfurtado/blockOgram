@@ -593,6 +593,12 @@ angular.module('myApp.controllers', ['myApp.i18n'])
       })
     }
 
+    $scope.openSecretChat = function () {
+      ContactsSelectService.selectContact({action: 'new_secret_chat'}).then(function (userID) {
+        //$scope.dialogSelect(AppUsersManager.getUserString(userID))
+      })
+    }
+
     $scope.importContact = function () {
       AppUsersManager.openImportContact().then(function (foundContact) {
         if (foundContact) {

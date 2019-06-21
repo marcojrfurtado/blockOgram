@@ -196,6 +196,8 @@
 	"changelog_modal_changelog_link": "Changelog",
 	"changelog_app_version": "Version {version}",
 
+	"secretchat_create_contacts_modal_title": "New secret chat",
+
 	"group_create_contacts_modal_title": "New group",
 	"group_create_modal_title": "Create group",
 	"group_create_name": "Group name",
@@ -464,6 +466,7 @@
 
 	"head_telegram": "Telegram",
 	"head_new_group": "New group",
+	"head_new_secret_chat": "New secret chat",
 	"head_new_contact": "New contact",
 	"head_contacts": "Contacts",
 	"head_contacts_title": "Contacts",
@@ -498,6 +501,7 @@
 
 
 	"im_new_group": "New group",
+	"im_new_secret_chat": "New secret chat",
 	"im_new_contact": "New contact",
 	"im_contacts": "Contacts",
 	"im_chat_contacts_title": "Chats and contacts",

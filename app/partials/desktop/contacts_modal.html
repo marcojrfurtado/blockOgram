@@ -16,6 +16,7 @@
         </span>
         <span ng-switch-default my-i18n="group_create_contacts_modal_title"></span>
       </div>
+      <span ng-switch-when="new_secret_chat" my-i18n="secretchat_create_contacts_modal_title"></span>
       <span ng-switch-default my-i18n="contacts_modal_title"></span>
     </div>
   </div>
@@ -75,6 +76,9 @@
       <my-i18n msgid="contacts_modal_edit_delete"></my-i18n>
       <strong ng-bind="selectedCount"></strong>
     </button>
+
+    <div ng-switch-when="new_secret_chat" class="text-center">
+    </div>
 
     <div ng-switch-default class="text-center">
       <button class="btn btn-md btn-md-primary" ng-click="importContact()" my-i18n="contacts_modal_new_contact"></button>
